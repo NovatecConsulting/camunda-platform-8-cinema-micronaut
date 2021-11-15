@@ -1,0 +1,24 @@
+package info.novatec.process;
+
+import info.novatec.model.Reservation;
+import info.novatec.model.Ticket;
+import io.camunda.zeebe.client.api.response.ActivatedJob;
+
+import java.util.List;
+
+public class ProcessVariableHandler {
+
+    public static Reservation getReservation(ActivatedJob job) {
+        return job.getVariablesAsType(Reservation.class);
+    }
+
+    public static Ticket getTicket(ActivatedJob job) {
+        return job.getVariablesAsType(Ticket.class);
+    }
+
+    public static List<String> getSeats(ActivatedJob job) {
+        Reservation reservation = getReservation(job);
+        return reservation.getSeats();
+    }
+
+}

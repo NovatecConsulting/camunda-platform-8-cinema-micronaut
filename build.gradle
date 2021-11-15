@@ -1,0 +1,37 @@
+plugins {
+    id 'com.github.johnrengelman.shadow'
+    id 'io.micronaut.application'
+}
+
+group = "info.novatec"
+
+repositories {
+    mavenCentral()
+}
+
+micronaut {
+    runtime "netty"
+    testRuntime "junit5"
+    processing {
+        incremental(true)
+        annotations "info.novatec.*"
+    }
+}
+
+dependencies {
+    implementation "io.micronaut:micronaut-runtime"
+    implementation "info.novatec:micronaut-zeebe-client-feature:$zeebeClientVersion"
+    implementation "javax.annotation:javax.annotation-api"
+    implementation "com.google.zxing:core:$zxingVersion" // qrcode generation
+    implementation "org.apache.commons:commons-lang3:$commonsLang3Version" // random string generator
+    runtimeOnly "ch.qos.logback:logback-classic"
+}
+
+application {
+    mainClass.set("info.novatec.ZeebeCinemaApp")
+}
+
+java {
+    sourceCompatibility = JavaVersion.VERSION_11
+    targetCompatibility = JavaVersion.VERSION_11
+}

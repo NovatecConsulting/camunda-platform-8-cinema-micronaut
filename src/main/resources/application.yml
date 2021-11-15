@@ -1,0 +1,9 @@
+micronaut:
+  application:
+    name: micronaut-zeebe-cinema
+  server:
+    port: 8089
+
+zeebe:
+  cinema:
+    paymentFailureActive: false
