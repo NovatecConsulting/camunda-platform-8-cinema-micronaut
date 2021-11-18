@@ -13,14 +13,14 @@ import java.util.Optional;
 public class PaymentService {
 
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
-    private final Optional<Boolean> paymentFailureActive;
+    private final boolean paymentFailureActive;
 
     PaymentService(Configuration configuration) {
-        this.paymentFailureActive = configuration.getPaymentFailureActive();
+        this.paymentFailureActive = configuration.getPaymentFailureActive().orElse(false);
     }
 
     public void issueMoney(long ticketPrice, String iban, String bic) throws PaymentException {
-        if (paymentFailureActive.isPresent() && paymentFailureActive.get() && Math.random() > 0.25) {
+        if (paymentFailureActive && Math.random() < 0.25) {
             logger.error("There was an issue with the payment");
             throw new PaymentException("Bank declined the transaction. Code: " + generateRandomBankReference());
         } else {
@@ -30,9 +30,5 @@ public class PaymentService {
 
     private String generateRandomBankReference() {
         return RandomStringUtils.random(12, true, true).toUpperCase();
-    }
-
-    public void giveMoneyBack(int ticketPrice, String iban, String bic) {
-        logger.info("Sending {} Euro to IBAN {}, BIC {}", ticketPrice, iban, bic);
     }
 }
