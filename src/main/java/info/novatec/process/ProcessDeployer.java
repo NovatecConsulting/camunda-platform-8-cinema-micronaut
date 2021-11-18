@@ -31,7 +31,7 @@ public class ProcessDeployer {
                 .send()
                 .join();
         Process process = deployment.getProcesses().get(0);
-        logger.info("deployed process {} with id {}", process.getResourceName(), process.getProcessDefinitionKey());
+        logger.info("deployed process resource '{}' with proc def key '{}' and bpmn proc id '{}'", process.getResourceName(), process.getProcessDefinitionKey(), process.getBpmnProcessId());
     }
 
 }
