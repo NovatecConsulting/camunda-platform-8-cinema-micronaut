@@ -1,8 +1,10 @@
-## BPMN Cinema
-Zeebe Cinema is a showcase for the Camunda Cloud platform and the Micronaut Zeebe intergration by Novatec
+## Micronaut Zeebe Cinema
+Micronaut Zeebe Cinema is a showcase for the Camunda Cloud platform and the Micronaut Zeebe intergration by Novatec
 
-### Engines
+### Tech Stack
 - Zeebe 1.2.x
+- Micronaut 3.x
+- Java 11
 
 ### Techniques
 - Zeebe Workers in Micronaut
@@ -16,9 +18,12 @@ Zeebe Cinema is a showcase for the Camunda Cloud platform and the Micronaut Zeeb
 <img alt="process model" src="src/main/resources/reserve-tickets.png" width="900">
 
 ## How to run it
-- generate a client configuration on you Camunda Cloud account (tab API)
-- add your camunda cloud cluster credentials to the `src/main/resources/application.yml`
-- optionally: start a local containerized zeebe/optimize setup (see `docker/docker-compose.yml`)
+- setup a camunda cloud instance / zeebe engine
+    - remote
+        - generate a client configuration on your Camunda Cloud account (tab API)
+        - add your camunda cloud cluster credentials to the `src/main/resources/application.yml`
+    - local
+        - start a local containerized zeebe/optimize setup (see `docker/docker-compose.yml`)
 - start the application
     - run `./gradlew bootRun` from your terminal
     - use your IDE to start the application
@@ -28,7 +33,8 @@ Zeebe Cinema is a showcase for the Camunda Cloud platform and the Micronaut Zeeb
         - body: `{ "userId":"max.mustermann", "seats": [ "A1", "A2" ], price: -1, reservationId: "empty" }`
         - content-type: `application/json`
         - no auth necessary
-- check the log output
-- in case alternative seats are offered you can check your log for an offer link: `To accept these seats, click the following link: ...`
-- clicking the link triggers the message correlation, otherwise the process stops after 2min
+- check the log output or Optimize for the progress (maybe you need to refine log levels -> Zeebe is very noisy in DEBUG)
+- in case alternative seats are offered 
+    - you can check your log for an offer link: `To accept these seats, click the following link: ...`
+    - clicking the link triggers the message correlation, otherwise the process stops after 2min
 - you can also check Optimize to see incicents or running instances under http://localhost:8080 -> user/pw is demo/demo
