@@ -1,6 +1,7 @@
 package info.novatec.worker;
 
 import info.novatec.model.Ticket;
+import info.novatec.process.ProcessVariables;
 import info.novatec.service.TicketService;
 import info.novatec.micronaut.zeebe.client.feature.ZeebeWorker;
 import info.novatec.process.ProcessVariableHandler;
@@ -9,6 +10,9 @@ import io.camunda.zeebe.client.api.worker.JobClient;
 import jakarta.inject.Singleton;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.HashMap;
+import java.util.Map;
 
 @Singleton
 public class TicketWorker {
@@ -25,7 +29,9 @@ public class TicketWorker {
     public void generateTicket(final JobClient client, final ActivatedJob job) {
         logger.info("generating ticket");
         Ticket ticket = ticketService.generateTickets(ProcessVariableHandler.getReservation(job));
-        client.newCompleteCommand(job.getKey()).variables(ticket).send().join();
+        Map<String, Object> variables = new HashMap<>();
+        variables.put(ProcessVariables.TICKET.getName(), ticket);
+        client.newCompleteCommand(job.getKey()).variables(variables).send().join();
     }
 
     @ZeebeWorker(type = "send-ticket")

@@ -2,7 +2,8 @@ package info.novatec.process;
 
 public enum ProcessVariables {
 
-    SEATS_AVAILABLE("seatsAvailable");
+    SEATS_AVAILABLE("seatsAvailable"),
+    TICKET("ticket");
 
     private final String name;
 
