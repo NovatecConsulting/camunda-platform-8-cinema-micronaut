@@ -1,10 +1,10 @@
 package info.novatec.worker;
 
 import info.novatec.service.SeatService;
-import info.novatec.process.ProcessVariables;
+import info.novatec.process.Variables;
 import info.novatec.service.TicketService;
 import info.novatec.micronaut.zeebe.client.feature.ZeebeWorker;
-import info.novatec.process.ProcessVariableHandler;
+import info.novatec.process.VariableHandler;
 import io.camunda.zeebe.client.api.response.ActivatedJob;
 import io.camunda.zeebe.client.api.worker.JobClient;
 import io.micronaut.runtime.server.EmbeddedServer;
@@ -33,10 +33,10 @@ public class SeatWorker {
     @ZeebeWorker(type = "check-seats")
     public void checkSeats(final JobClient client, final ActivatedJob job) {
         logger.info("checking seat availability");
-        List<String> seats = ProcessVariableHandler.getSeats(job);
+        List<String> seats = VariableHandler.getSeats(job);
         if (!seats.isEmpty()) {
             boolean available = seatService.seatsAvailable(seats);
-            Map<String, Boolean> variables = Collections.singletonMap(ProcessVariables.SEATS_AVAILABLE.getName(), available);
+            Map<String, Boolean> variables = Collections.singletonMap(Variables.SEATS_AVAILABLE.getName(), available);
             client.newCompleteCommand(job.getKey()).variables(variables).send().join();
         } else {
             client.newFailCommand(job.getKey()).retries(0).errorMessage("no seats found").send();
@@ -46,11 +46,11 @@ public class SeatWorker {
     @ZeebeWorker(type = "reserve-seats")
     public void reserveSeats(final JobClient client, final ActivatedJob job) {
         logger.info("reserving seats");
-        List<String> seats = ProcessVariableHandler.getSeats(job);
+        List<String> seats = VariableHandler.getSeats(job);
         if (!seats.isEmpty()) {
             seatService.reserveSeats(seats);
             int ticketPrice = ticketService.getTicketPrice(seats);
-            Map<String, Object> variables = new ProcessVariableHandler().withTicketPrice(ticketPrice).build();
+            Map<String, Object> variables = VariableHandler.empty().withTicketPrice(ticketPrice).build();
             client.newCompleteCommand(job.getKey()).variables(variables).send().join();
         } else {
             client.newFailCommand(job.getKey()).retries(0).errorMessage("no seats found").send().join();
@@ -60,11 +60,11 @@ public class SeatWorker {
     @ZeebeWorker(type = "alt-seats")
     public void alternativeSeats(final JobClient client, final ActivatedJob job) {
         logger.info("getting alternative seats");
-        List<String> seats = ProcessVariableHandler.getSeats(job);
+        List<String> seats = VariableHandler.getSeats(job);
         if (!seats.isEmpty()) {
             List<String> alternativeSeats = seatService.getAlternativeSeats(seats);
-            offerAltSeats(alternativeSeats, ProcessVariableHandler.getReservationId(job));
-            Map<String, Object> variables = new ProcessVariableHandler().withSeats(alternativeSeats).build();
+            offerAltSeats(alternativeSeats, VariableHandler.getReservationId(job));
+            Map<String, Object> variables = VariableHandler.of(job.getVariablesAsMap()).withSeats(alternativeSeats).build();
             client.newCompleteCommand(job.getKey()).variables(variables).send().join();
         } else {
             client.newFailCommand(job.getKey()).retries(0).errorMessage("no seats found").send().join();
@@ -74,7 +74,7 @@ public class SeatWorker {
     @ZeebeWorker(type = "release-seats")
     public void releaseSeats(final JobClient client, final ActivatedJob job) {
         logger.info("releasing seats");
-        List<String> seats = ProcessVariableHandler.getSeats(job);
+        List<String> seats = VariableHandler.getSeats(job);
         if (!seats.isEmpty()) {
             seatService.releaseSeats(seats);
             client.newCompleteCommand(job.getKey()).send().join();

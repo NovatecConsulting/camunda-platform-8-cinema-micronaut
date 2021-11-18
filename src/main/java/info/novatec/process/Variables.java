@@ -1,6 +1,6 @@
 package info.novatec.process;
 
-public enum ProcessVariables {
+public enum Variables {
 
     SEATS_AVAILABLE("seatsAvailable"),
     TICKET_ID("ticketId"),
@@ -13,7 +13,7 @@ public enum ProcessVariables {
 
     private final String name;
 
-    ProcessVariables(String name) {
+    Variables(String name) {
         this.name = name;
     }
 

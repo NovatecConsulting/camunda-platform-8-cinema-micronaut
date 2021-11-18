@@ -1,7 +1,7 @@
 package info.novatec.service;
 
 import info.novatec.process.ProcessMessage;
-import info.novatec.process.ProcessVariableHandler;
+import info.novatec.process.VariableHandler;
 import io.camunda.zeebe.client.ZeebeClient;
 import io.micronaut.http.HttpResponse;
 import io.micronaut.http.annotation.*;
@@ -25,7 +25,7 @@ public class CinemaController {
     @Post("/reservation/movie/{movieId}")
     public HttpResponse<String> reserveSeat(String movieId, @QueryValue String seats, @QueryValue String userId) {
         String reservationId = "RESERVATION-" + UUID.randomUUID();
-        Map<String, Object> variables = new ProcessVariableHandler()
+        Map<String, Object> variables = VariableHandler.empty()
                 .withSeats(Arrays.asList(seats.split(",")))
                 .withMovieId(movieId)
                 .withUserId(userId)
