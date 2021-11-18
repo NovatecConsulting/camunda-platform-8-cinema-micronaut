@@ -1,7 +1,7 @@
 package info.novatec.worker;
 
 import info.novatec.micronaut.zeebe.client.feature.ZeebeWorker;
-import info.novatec.process.VariableHandler;
+import info.novatec.process.Variables;
 import info.novatec.service.QRCodeService;
 import io.camunda.zeebe.client.api.response.ActivatedJob;
 import io.camunda.zeebe.client.api.worker.JobClient;
@@ -26,9 +26,9 @@ public class QrWorker {
     @ZeebeWorker(type = "generate-qr")
     public void generateTicket(final JobClient client, final ActivatedJob job) throws IOException {
         logger.info("generating qr code");
-        String ticketCode = VariableHandler.getTicketCode(job);
+        String ticketCode = Variables.getTicketCode(job);
         String qrCode = qrCodeService.generateQRCode(ticketCode);
-        Map<String, Object> variables = VariableHandler.empty().withQrCode(qrCode).build();
+        Map<String, Object> variables = Variables.empty().withQrCode(qrCode).get();
         client.newCompleteCommand(job.getKey()).variables(variables).send().join();
     }
 }

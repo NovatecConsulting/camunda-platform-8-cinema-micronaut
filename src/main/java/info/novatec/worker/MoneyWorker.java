@@ -2,7 +2,7 @@ package info.novatec.worker;
 
 import info.novatec.exception.PaymentException;
 import info.novatec.micronaut.zeebe.client.feature.ZeebeWorker;
-import info.novatec.process.VariableHandler;
+import info.novatec.process.Variables;
 import info.novatec.service.PaymentService;
 import io.camunda.zeebe.client.api.response.ActivatedJob;
 import io.camunda.zeebe.client.api.worker.JobClient;
@@ -24,7 +24,7 @@ public class MoneyWorker {
     @ZeebeWorker(type = "get-money")
     public void getMoney(final JobClient client, final ActivatedJob job) {
         logger.info("withdrawing money");
-        Integer price = VariableHandler.getTicketPrice(job);
+        Integer price = Variables.getTicketPrice(job);
         if (price != null) {
             try {
                 paymentService.issueMoney(price, "DE12345678901234", "VOBA123456XX");
