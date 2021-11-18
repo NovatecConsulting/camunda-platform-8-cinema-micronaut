@@ -1,15 +1,17 @@
 package info.novatec.model;
 
+import io.micronaut.core.annotation.Introspected;
+
 import java.util.ArrayList;
 import java.util.List;
 
+@Introspected
 public class Reservation {
 
     private String reservationId;
     private List<String> seats = new ArrayList<>();
     private long price;
     private Ticket ticket;
-    private UserAccount userAccount;
     private String userId;
     private boolean transactionSuccessful = false;
 
@@ -53,17 +55,9 @@ public class Reservation {
         this.ticket = ticket;
     }
 
-    public UserAccount getUserAccount() {
-        return userAccount;
-    }
-
-    public void setUserAccount(UserAccount userAccount) {
-        this.userAccount = userAccount;
-    }
-
     @Override
     public String toString() {
-        return "Sitze " + String.join(", ", seats);
+        return "Seats " + String.join(", ", seats);
     }
 
     public boolean isTransactionSuccessful() {

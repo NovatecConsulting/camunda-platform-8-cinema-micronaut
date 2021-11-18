@@ -1,8 +1,11 @@
 package info.novatec.model;
 
+import io.micronaut.core.annotation.Introspected;
+
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+@Introspected
 public class Ticket {
 
     private String code;
