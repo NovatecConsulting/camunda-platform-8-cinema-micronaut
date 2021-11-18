@@ -1,6 +1,9 @@
 {
+  "reservationId": "",
+  "userId": "Frank Müller",
   "seats": [
     "A1",
     "A2"
-  ]
+  ],
+  "price": -1
 }

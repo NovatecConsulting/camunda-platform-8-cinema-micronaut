@@ -6,4 +6,4 @@ micronaut:
 
 zeebe:
   cinema:
-    paymentFailureActive: false
+    paymentFailureActive: true

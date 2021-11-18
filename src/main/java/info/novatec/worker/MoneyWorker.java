@@ -29,8 +29,7 @@ public class MoneyWorker {
         if (reservation != null) {
             try {
                 paymentService.issueMoney(reservation.getPrice(), "DE12345678901234", "VOBA123456XX");
-                reservation.setTransactionSuccessful(true);
-                client.newCompleteCommand(job.getKey()).variables(reservation).send().join();
+                client.newCompleteCommand(job.getKey()).send().join();
             } catch (PaymentException e) {
                 client.newThrowErrorCommand(job.getKey()).errorCode(ERROR_CODE).errorMessage(e.getMessage()).send().join();
             }
