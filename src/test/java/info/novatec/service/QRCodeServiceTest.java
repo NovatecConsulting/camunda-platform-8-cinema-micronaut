@@ -1,0 +1,20 @@
+package info.novatec.service;
+
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
+
+class QRCodeServiceTest {
+
+    @Test
+    void test_qr_generation_generates_base64_encoded_string() throws Exception {
+        String code = new QRCodeService().generateQRCode("foo");
+        Assertions.assertEquals("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", code);
+    }
+
+    @Test
+    void test_encoding_fails_when_id_null() {
+        Assertions.assertThrows(NullPointerException.class, () -> new QRCodeService().generateQRCode(null));
+    }
+
+
+}

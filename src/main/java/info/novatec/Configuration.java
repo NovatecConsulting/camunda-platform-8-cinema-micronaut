@@ -1,4 +1,4 @@
-package info.novatec.config;
+package info.novatec;
 
 import io.micronaut.context.annotation.ConfigurationProperties;
 import io.micronaut.context.annotation.Context;

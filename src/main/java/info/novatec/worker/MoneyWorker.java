@@ -1,10 +1,9 @@
 package info.novatec.worker;
 
 import info.novatec.exception.PaymentException;
-import info.novatec.model.Reservation;
-import info.novatec.service.PaymentService;
 import info.novatec.micronaut.zeebe.client.feature.ZeebeWorker;
 import info.novatec.process.ProcessVariableHandler;
+import info.novatec.service.PaymentService;
 import io.camunda.zeebe.client.api.response.ActivatedJob;
 import io.camunda.zeebe.client.api.worker.JobClient;
 import jakarta.inject.Singleton;
@@ -25,16 +24,16 @@ public class MoneyWorker {
     @ZeebeWorker(type = "get-money")
     public void getMoney(final JobClient client, final ActivatedJob job) {
         logger.info("withdrawing money");
-        Reservation reservation = ProcessVariableHandler.getReservation(job);
-        if (reservation != null) {
+        Integer price = ProcessVariableHandler.getTicketPrice(job);
+        if (price != null) {
             try {
-                paymentService.issueMoney(reservation.getPrice(), "DE12345678901234", "VOBA123456XX");
+                paymentService.issueMoney(price, "DE12345678901234", "VOBA123456XX");
                 client.newCompleteCommand(job.getKey()).send().join();
             } catch (PaymentException e) {
                 client.newThrowErrorCommand(job.getKey()).errorCode(ERROR_CODE).errorMessage(e.getMessage()).send().join();
             }
         } else {
-            client.newFailCommand(job.getKey()).retries(0).errorMessage("no reservation set").send().join();
+            client.newFailCommand(job.getKey()).retries(0).errorMessage("no ticket price set").send().join();
         }
     }
 }

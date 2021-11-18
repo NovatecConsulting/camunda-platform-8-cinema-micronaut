@@ -28,11 +28,10 @@ Micronaut Zeebe Cinema is a showcase for the Camunda Cloud platform and the Micr
     - run `./gradlew bootRun` from your terminal
     - use your IDE to start the application
 - use a REST client to make a reservation:
-    - endpoint `localhost:8089/reservation`
-    - POST request
-        - body: `{ "userId":"max.mustermann", "seats": [ "A1", "A2" ], price: -1, reservationId: "empty" }`
-        - content-type: `application/json`
-        - no auth necessary
+    - endpoint `localhost:8089/reservation/movie`
+    - GET request
+        - localhost:8089/reservation/movie/{movie}?seats=A1,A2&userId=max.mustermann
+        - {movie} can be any string for a movie e.g. 'the-bpmn-movie'
 - check the log output or Optimize for the progress (maybe you need to refine log levels -> Zeebe is very noisy in DEBUG)
 - in case alternative seats are offered 
     - you can check your log for an offer link: `To accept these seats, click the following link: ...`

@@ -1,24 +1,22 @@
 package info.novatec.service;
 
-import info.novatec.model.Reservation;
 import info.novatec.model.Ticket;
 import jakarta.inject.Singleton;
 
+import java.util.List;
 import java.util.UUID;
 
 @Singleton
 public class TicketService {
 
-    public static final long TICKET_PRICE = 12L;
+    public static final int TICKET_PRICE = 12;
 
-    public Ticket generateTickets(Reservation reservation) {
-        Ticket ticket = new Ticket(UUID.randomUUID().toString());
-        ticket.setInfo(reservation.getUserId(), reservation.toString(), ticket.getCode());
-        return ticket;
+    public Ticket generateTickets() {
+        return new Ticket(UUID.randomUUID().toString());
     }
 
-    public long getTicketPrice(Reservation reservation) {
-        return reservation.getSeats().size() * TICKET_PRICE;
+    public int getTicketPrice(List<String> seats) {
+        return seats.size() * TICKET_PRICE;
     }
 
 }

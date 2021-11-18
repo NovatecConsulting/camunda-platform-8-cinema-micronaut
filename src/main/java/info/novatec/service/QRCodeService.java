@@ -11,8 +11,11 @@ import jakarta.inject.Singleton;
 import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
-import java.io.File;
+import java.awt.image.RenderedImage;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.UncheckedIOException;
+import java.util.Base64;
 import java.util.Hashtable;
 
 @Singleton
@@ -21,13 +24,13 @@ public class QRCodeService {
     public static final int WIDTH = 125;
     public static final int HEIGHT = WIDTH;
 
-    public File generateQRCode(String ticketId) throws IOException {
-        File qrCode = new File("build/tickets/" + ticketId + ".png");
-        boolean ignored = qrCode.mkdirs();
+    public String generateQRCode(String ticketId) throws IOException {
+        final ByteArrayOutputStream os = new ByteArrayOutputStream();
+
         Hashtable<EncodeHintType, ErrorCorrectionLevel> hintMap = new Hashtable<>();
         hintMap.put(EncodeHintType.ERROR_CORRECTION, ErrorCorrectionLevel.L);
         QRCodeWriter qrCodeWriter = new QRCodeWriter();
-        BitMatrix byteMatrix = null;
+        BitMatrix byteMatrix;
         try {
             byteMatrix = qrCodeWriter.encode(ticketId, BarcodeFormat.QR_CODE, WIDTH, HEIGHT, hintMap);
         } catch (WriterException e) {
@@ -42,7 +45,6 @@ public class QRCodeService {
         Graphics2D graphics = (Graphics2D) image.getGraphics();
         graphics.setColor(Color.WHITE);
         graphics.fillRect(0, 0, matrixWidth, matrixHeight);
-        // Paint and save the image using the ByteMatrix
         graphics.setColor(Color.BLACK);
 
         for (int i = 0; i < matrixWidth; i++) {
@@ -52,7 +54,7 @@ public class QRCodeService {
                 }
             }
         }
-        ImageIO.write(image, "png", qrCode);
-        return qrCode;
+        ImageIO.write(image, "png", os);
+        return Base64.getEncoder().encodeToString(os.toByteArray());
     }
 }

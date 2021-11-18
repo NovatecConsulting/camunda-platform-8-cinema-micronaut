@@ -1,6 +1,6 @@
 package info.novatec.service;
 
-import info.novatec.config.Configuration;
+import info.novatec.Configuration;
 import info.novatec.exception.PaymentException;
 import jakarta.inject.Singleton;
 import org.apache.commons.lang3.RandomStringUtils;
