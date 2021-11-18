@@ -42,7 +42,11 @@ public class CinemaController {
 
     @Get("/offer/{id}")
     public HttpResponse<String> acceptOffer(@PathVariable String id) {
-        zeebeClient.newPublishMessageCommand().messageName(ProcessMessage.SEATS_VERIFIED.getName()).correlationKey(id).send().join();
+        zeebeClient.newPublishMessageCommand()
+                .messageName(ProcessMessage.SEATS_VERIFIED.getName())
+                .correlationKey(id)
+                .send()
+                .join();
         logger.info("The offer for reservation {} was accepted", id);
         return HttpResponse.ok("Reservation change accepted");
     }
