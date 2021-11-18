@@ -7,13 +7,15 @@ import org.slf4j.LoggerFactory;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+import java.util.stream.IntStream;
 
 @Singleton
 public class SeatService {
 
     private final Logger logger = LoggerFactory.getLogger(SeatService.class);
+    public static final double AVAILABILITY_RATE = 0.15;
     private static final int MAX_SEATS_IN_ROW = 20;
-    private static final int MAX_ROWS = 26;
+    private static final int MAX_ROWS = 25; // a-z or a+25 = z
 
     public void reserveSeats(List<String> seats) {
         logSeatWithMessage(seats, "Seat reserved: {}");
@@ -29,12 +31,9 @@ public class SeatService {
 
     public List<String> getAlternativeSeats(List<String> seats) {
         List<String> alternativeSeats = new ArrayList<>();
-        int seat = getRandomStartingSeat(seats.size());
+        final int seat = getRandomStartingSeat(seats.size());
         String row = getRandomRow();
-        for (int i = 0; i < seats.size(); i++) {
-            alternativeSeats.add(row + seat);
-            seat++;
-        }
+        IntStream.range(seat, seat + seats.size()).forEach(i -> alternativeSeats.add(row + i));
         return alternativeSeats;
     }
 
@@ -47,15 +46,11 @@ public class SeatService {
         return String.valueOf(randomChar).toUpperCase();
     }
 
-    public int getTicketPrice(List<String> seats) {
-        return seats.size() * 9;
-    }
-
     private void logSeatWithMessage(List<String> seats, String s) {
         seats.forEach(seat -> logger.info(s, seat));
     }
 
     private boolean seatAvailable() {
-        return Math.random() > 0.15;  // in 15% of cases, seats are no longer available;
+        return Math.random() > AVAILABILITY_RATE;
     }
 }
