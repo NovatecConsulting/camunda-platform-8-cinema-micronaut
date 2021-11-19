@@ -42,7 +42,7 @@ public class CinemaController {
                 .send()
                 .join();
         logger.info("Reservation issued: " + reservationId);
-        return HttpResponse.accepted().body("Reservation issued: " + reservationId);
+        return HttpResponse.created("Reservation issued: " + reservationId);
     }
 
     @Get("/offer/{id}")
@@ -53,7 +53,7 @@ public class CinemaController {
                 .send()
                 .join();
         logger.info("The offer for reservation {} was accepted", id);
-        return HttpResponse.ok("Reservation change accepted");
+        return HttpResponse.accepted().body("Reservation change accepted");
     }
 
 }
