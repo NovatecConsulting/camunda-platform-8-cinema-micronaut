@@ -1,6 +1,5 @@
 package info.novatec.service;
 
-import info.novatec.process.ProcessMessage;
 import info.novatec.process.Variables;
 import io.camunda.zeebe.client.ZeebeClient;
 import io.micronaut.http.HttpResponse;
@@ -12,10 +11,16 @@ import java.util.Arrays;
 import java.util.Map;
 import java.util.UUID;
 
+/**
+ * @author Stefan Schultz
+ *
+ * rest controller to start instances and interact with service tasks
+ */
 @Controller
 public class CinemaController {
 
     private final Logger logger = LoggerFactory.getLogger(CinemaController.class);
+    public static final String VERIFIED_MESSAGE = "seatsVerifiedByCustomer";
     private final ZeebeClient zeebeClient;
 
     public CinemaController(ZeebeClient zeebeClient) {
@@ -24,7 +29,7 @@ public class CinemaController {
 
     @Post("/reservation/movie/{movieId}")
     public HttpResponse<String> reserveSeat(String movieId, @QueryValue String seats, @QueryValue String userId) {
-        String reservationId = "RESERVATION-" + UUID.randomUUID();
+        String reservationId = "res-" + UUID.randomUUID();
         Map<String, Object> variables = Variables.empty()
                 .withSeats(Arrays.asList(seats.split(",")))
                 .withMovieId(movieId)
@@ -43,7 +48,7 @@ public class CinemaController {
     @Get("/offer/{id}")
     public HttpResponse<String> acceptOffer(@PathVariable String id) {
         zeebeClient.newPublishMessageCommand()
-                .messageName(ProcessMessage.SEATS_VERIFIED.getName())
+                .messageName(VERIFIED_MESSAGE)
                 .correlationKey(id)
                 .send()
                 .join();

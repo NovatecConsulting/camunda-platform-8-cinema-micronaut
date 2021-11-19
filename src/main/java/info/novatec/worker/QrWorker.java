@@ -12,6 +12,11 @@ import org.slf4j.LoggerFactory;
 import java.io.IOException;
 import java.util.Map;
 
+/**
+ * @author stefan schultz
+ *
+ * worker to handle qr code generation
+ */
 @Singleton
 public class QrWorker {
 

@@ -9,6 +9,11 @@ import java.util.List;
 import java.util.Random;
 import java.util.stream.IntStream;
 
+/**
+ * @author Stefan Schultz
+ *
+ * pseudo service to handle seat reservations and alternative seat creation
+ */
 @Singleton
 public class SeatService {
 

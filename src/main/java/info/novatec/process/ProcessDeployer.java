@@ -12,6 +12,11 @@ import org.slf4j.LoggerFactory;
 
 import java.time.Duration;
 
+/**
+ * @author Stefan Schultz
+ *
+ * deploys a process during startup
+ */
 @Singleton
 public class ProcessDeployer {
 

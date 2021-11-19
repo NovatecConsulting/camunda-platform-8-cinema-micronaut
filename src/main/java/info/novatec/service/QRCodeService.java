@@ -18,6 +18,11 @@ import java.io.UncheckedIOException;
 import java.util.Base64;
 import java.util.Hashtable;
 
+/**
+ * @author Stefan Schultz
+ *
+ * class to generate a qr code and encode it as base64 string
+ */
 @Singleton
 public class QRCodeService {
 

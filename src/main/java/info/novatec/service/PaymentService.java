@@ -1,13 +1,10 @@
 package info.novatec.service;
 
 import info.novatec.Configuration;
-import info.novatec.exception.PaymentException;
 import jakarta.inject.Singleton;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.util.Optional;
 
 @Singleton
 public class PaymentService {
@@ -19,10 +16,10 @@ public class PaymentService {
         this.paymentFailureActive = configuration.getPaymentFailureActive().orElse(false);
     }
 
-    public void issueMoney(long ticketPrice, String iban, String bic) throws PaymentException {
+    public void issueMoney(long ticketPrice, String iban, String bic) {
         if (paymentFailureActive && Math.random() < 0.25) {
             logger.error("There was an issue with the payment");
-            throw new PaymentException("Bank declined the transaction. Code: " + generateRandomBankReference());
+            throw new RuntimeException("Bank declined the transaction. Code: " + generateRandomBankReference());
         } else {
             logger.info("Getting {} Euro from IBAN {}, BIC {}", ticketPrice, iban, bic);
         }

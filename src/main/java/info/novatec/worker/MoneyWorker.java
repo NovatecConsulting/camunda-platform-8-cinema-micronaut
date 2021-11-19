@@ -1,6 +1,5 @@
 package info.novatec.worker;
 
-import info.novatec.exception.PaymentException;
 import info.novatec.micronaut.zeebe.client.feature.ZeebeWorker;
 import info.novatec.process.Variables;
 import info.novatec.service.PaymentService;
@@ -10,6 +9,11 @@ import jakarta.inject.Singleton;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/**
+ * @author Stefan Schultz
+ *
+ * worker to handle money transactions
+ */
 @Singleton
 public class MoneyWorker {
 
@@ -29,7 +33,7 @@ public class MoneyWorker {
             try {
                 paymentService.issueMoney(price, "DE12345678901234", "VOBA123456XX");
                 client.newCompleteCommand(job.getKey()).send().join();
-            } catch (PaymentException e) {
+            } catch (Exception e) {
                 client.newThrowErrorCommand(job.getKey()).errorCode(ERROR_CODE).errorMessage(e.getMessage()).send().join();
             }
         } else {

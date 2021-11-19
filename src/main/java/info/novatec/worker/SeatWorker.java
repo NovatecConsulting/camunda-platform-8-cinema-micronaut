@@ -14,6 +14,11 @@ import org.slf4j.LoggerFactory;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * @author Stefan Schultz
+ *
+ * worker to handle seat related stuff
+ */
 @Singleton
 public class SeatWorker {
 
@@ -47,7 +52,7 @@ public class SeatWorker {
         List<String> seats = Variables.getSeats(job);
         if (!seats.isEmpty()) {
             seatService.reserveSeats(seats);
-            int ticketPrice = ticketService.getTicketPrice(seats);
+            int ticketPrice = ticketService.calculateTicketPrice(seats);
             Map<String, Object> variables = Variables.empty().withTicketPrice(ticketPrice).get();
             client.newCompleteCommand(job.getKey()).variables(variables).send().join();
         } else {
