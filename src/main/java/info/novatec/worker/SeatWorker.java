@@ -20,7 +20,7 @@ import java.util.Map;
  * worker to handle seat related stuff
  */
 @Singleton
-public class SeatWorker {
+public class SeatWorker extends Worker {
 
     private final Logger logger = LoggerFactory.getLogger(SeatWorker.class);
     private final SeatService seatService;
@@ -40,9 +40,9 @@ public class SeatWorker {
         if (!seats.isEmpty()) {
             boolean available = seatService.seatsAvailable(seats);
             Map<String, Object> variables = Variables.empty().withSeatAvailable(available).get();
-            client.newCompleteCommand(job.getKey()).variables(variables).send().join();
+            completeJob(client, job, variables);
         } else {
-            client.newFailCommand(job.getKey()).retries(0).errorMessage("no seats found").send();
+            failJob(client, job, "no seats found");
         }
     }
 
@@ -54,9 +54,9 @@ public class SeatWorker {
             seatService.reserveSeats(seats);
             int ticketPrice = ticketService.calculateTicketPrice(seats);
             Map<String, Object> variables = Variables.empty().withTicketPrice(ticketPrice).get();
-            client.newCompleteCommand(job.getKey()).variables(variables).send().join();
+            completeJob(client, job, variables);
         } else {
-            client.newFailCommand(job.getKey()).retries(0).errorMessage("no seats found").send().join();
+            failJob(client, job, "no seats found");
         }
     }
 
@@ -68,9 +68,9 @@ public class SeatWorker {
             List<String> alternativeSeats = seatService.getAlternativeSeats(seats);
             offerAltSeats(alternativeSeats, Variables.getReservationId(job));
             Map<String, Object> variables = Variables.of(job.getVariablesAsMap()).withSeats(alternativeSeats).get();
-            client.newCompleteCommand(job.getKey()).variables(variables).send().join();
+            completeJob(client, job, variables);
         } else {
-            client.newFailCommand(job.getKey()).retries(0).errorMessage("no seats found").send().join();
+            failJob(client, job, "no seats found");
         }
     }
 
@@ -80,9 +80,9 @@ public class SeatWorker {
         List<String> seats = Variables.getSeats(job);
         if (!seats.isEmpty()) {
             seatService.releaseSeats(seats);
-            client.newCompleteCommand(job.getKey()).send().join();
+            completeJob(client, job);
         } else {
-            client.newFailCommand(job.getKey()).retries(0).errorMessage("no seats found").send().join();
+            failJob(client, job, "no seats found");
         }
     }
 

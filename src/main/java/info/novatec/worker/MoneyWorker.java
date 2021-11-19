@@ -11,11 +11,11 @@ import org.slf4j.LoggerFactory;
 
 /**
  * @author Stefan Schultz
- *
+ * <p>
  * worker to handle money transactions
  */
 @Singleton
-public class MoneyWorker {
+public class MoneyWorker extends Worker {
 
     private final String ERROR_CODE = "Transaction_Error";
     private final Logger logger = LoggerFactory.getLogger(MoneyWorker.class);
@@ -32,12 +32,12 @@ public class MoneyWorker {
         if (price != null) {
             try {
                 paymentService.issueMoney(price, "DE12345678901234", "VOBA123456XX");
-                client.newCompleteCommand(job.getKey()).send().join();
+                completeJob(client, job);
             } catch (Exception e) {
-                client.newThrowErrorCommand(job.getKey()).errorCode(ERROR_CODE).errorMessage(e.getMessage()).send().join();
+                throwBusinessError(client, job, ERROR_CODE, e.getMessage());
             }
         } else {
-            client.newFailCommand(job.getKey()).retries(0).errorMessage("no ticket price set").send().join();
+            failJob(client, job, "no ticket price set");
         }
     }
 }

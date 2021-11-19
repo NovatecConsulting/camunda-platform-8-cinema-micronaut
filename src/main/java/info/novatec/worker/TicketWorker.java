@@ -20,7 +20,7 @@ import java.util.Map;
  * worker to handle ticket related stuff
  */
 @Singleton
-public class TicketWorker {
+public class TicketWorker extends Worker {
 
     Logger logger = LoggerFactory.getLogger(TicketWorker.class);
 
@@ -35,7 +35,7 @@ public class TicketWorker {
         logger.info("generating ticket");
         String ticketId = ticketService.generateTicketId();
         Map<String, Object> variables = Variables.empty().withTicketId(ticketId).get();
-        client.newCompleteCommand(job.getKey()).variables(variables).send().join();
+        completeJob(client, job, variables);
     }
 
     @ZeebeWorker(type = "send-ticket")
@@ -47,7 +47,7 @@ public class TicketWorker {
         String movieId = Variables.getMovieId(job);
         String message = generateMessage(userId, movieId, String.join(", ", seats), ticket, qrCode);
         logger.info("sending ticket {} to customer", ticket);
-        client.newCompleteCommand(job.getKey()).send().join();
+        completeJob(client, job);
         logger.info(message);
     }
 

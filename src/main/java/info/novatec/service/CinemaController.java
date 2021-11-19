@@ -40,7 +40,7 @@ public class CinemaController {
                 .latestVersion()
                 .variables(variables)
                 .send()
-                .join();
+                .exceptionally( throwable -> { throw new RuntimeException("Could not start new instance", throwable); });
         logger.info("Reservation issued: " + reservationId);
         return HttpResponse.created("Reservation issued: " + reservationId);
     }
@@ -51,7 +51,7 @@ public class CinemaController {
                 .messageName(VERIFIED_MESSAGE)
                 .correlationKey(id)
                 .send()
-                .join();
+                .exceptionally( throwable -> { throw new RuntimeException("Could not send message", throwable); });
         logger.info("The offer for reservation {} was accepted", id);
         return HttpResponse.accepted().body("Reservation change accepted");
     }

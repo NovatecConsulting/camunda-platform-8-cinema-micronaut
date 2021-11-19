@@ -18,7 +18,7 @@ import java.util.Map;
  * worker to handle qr code generation
  */
 @Singleton
-public class QrWorker {
+public class QrWorker extends Worker {
 
     Logger logger = LoggerFactory.getLogger(QrWorker.class);
 
@@ -34,6 +34,6 @@ public class QrWorker {
         String ticketCode = Variables.getTicketCode(job);
         String qrCode = qrCodeService.generateQRCode(ticketCode);
         Map<String, Object> variables = Variables.empty().withQrCode(qrCode).get();
-        client.newCompleteCommand(job.getKey()).variables(variables).send().join();
+        completeJob(client, job, variables);
     }
 }
