@@ -25,6 +25,10 @@ dependencies {
     implementation "com.google.zxing:core:$zxingVersion" // qrcode generation
     implementation "org.apache.commons:commons-lang3:$commonsLang3Version" // random string generator
     runtimeOnly "ch.qos.logback:logback-classic"
+
+    testImplementation "org.mockito:mockito-core"
+    testImplementation "org.mockito:mockito-junit-jupiter"
+    testImplementation "org.assertj:assertj-core"
 }
 
 application {
