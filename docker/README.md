@@ -1,10 +1,10 @@
-# micronaut-zeebe-server-application
+# Local setup
 
-The example setup starts a local gateway on default port `26500` and two nodes 
+The example setup starts a local zeebe and optimize instance
 
 - start the docker environment
-    - cd `micronaut-zeebe-client/micronaut-zeebe-client-server-example`
     - run `docker-compose up`
+    - the Optimize UI can be accessed at `localhost:8080` with credentials `demo:demo`
     
 - stop the environment
-    - `docker-compose down`
+    - run `docker-compose down`
