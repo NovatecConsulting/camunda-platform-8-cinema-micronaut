@@ -5,7 +5,7 @@ import io.camunda.zeebe.client.api.worker.JobClient;
 
 import java.util.Map;
 
-public class Worker {
+abstract class Worker {
 
     void completeJob(JobClient client, ActivatedJob job) {
         client.newCompleteCommand(job.getKey())
