@@ -4,6 +4,14 @@ micronaut:
   server:
     port: 8089
 
+logger:
+  levels:
+    io.micronaut: INFO
+    io.grpc.netty: INFO
+    io.netty: INFO
+    io.camunda: INFO
+    info.novatec: INFO
+
 zeebe:
   cinema:
     paymentFailureActive: true
