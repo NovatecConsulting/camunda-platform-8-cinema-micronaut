@@ -11,16 +11,14 @@ import jakarta.inject.Singleton;
 import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
-import java.awt.image.RenderedImage;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.io.UncheckedIOException;
 import java.util.Base64;
 import java.util.Hashtable;
 
 /**
  * @author Stefan Schultz
- *
+ * <p>
  * class to generate a qr code and encode it as base64 string
  */
 @Singleton
@@ -47,19 +45,41 @@ public class QRCodeService {
         BufferedImage image = new BufferedImage(matrixWidth, matrixHeight, BufferedImage.TYPE_INT_RGB);
         image.createGraphics();
 
-        Graphics2D graphics = (Graphics2D) image.getGraphics();
-        graphics.setColor(Color.WHITE);
-        graphics.fillRect(0, 0, matrixWidth, matrixHeight);
-        graphics.setColor(Color.BLACK);
+        fillGraphics(byteMatrix, image);
+        ImageIO.write(image, "png", os);
+        return Base64.getEncoder().encodeToString(os.toByteArray());
 
+        // return qrToConsole(byteMatrix);
+    }
+
+    public String qrToConsole(BitMatrix byteMatrix) {
+        StringBuilder stringBuilder = new StringBuilder();
+        int matrixWidth = byteMatrix.getWidth();
         for (int i = 0; i < matrixWidth; i++) {
             for (int j = 0; j < matrixWidth; j++) {
+                if (byteMatrix.get(i, j)) {
+                    stringBuilder.append("x");
+                } else {
+                    stringBuilder.append(" ");
+                }
+            }
+            stringBuilder.append("\n\r");
+        }
+        return stringBuilder.toString();
+    }
+
+    public void fillGraphics(BitMatrix byteMatrix, BufferedImage image) {
+        Graphics2D graphics = (Graphics2D) image.getGraphics();
+        graphics.setColor(Color.WHITE);
+        graphics.fillRect(0, 0, byteMatrix.getWidth(), byteMatrix.getHeight());
+        graphics.setColor(Color.BLACK);
+
+        for (int i = 0; i < byteMatrix.getWidth(); i++) {
+            for (int j = 0; j < byteMatrix.getWidth(); j++) {
                 if (byteMatrix.get(i, j)) {
                     graphics.fillRect(i, j, 1, 1);
                 }
             }
         }
-        ImageIO.write(image, "png", os);
-        return Base64.getEncoder().encodeToString(os.toByteArray());
     }
 }
