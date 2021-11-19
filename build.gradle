@@ -14,7 +14,6 @@ micronaut {
     testRuntime "junit5"
     processing {
         incremental(true)
-        annotations "info.novatec.*"
     }
 }
 
