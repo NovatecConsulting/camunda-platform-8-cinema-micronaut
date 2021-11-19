@@ -67,7 +67,7 @@ public class SeatWorker extends Worker {
         if (!seats.isEmpty()) {
             List<String> alternativeSeats = seatService.getAlternativeSeats(seats);
             offerAltSeats(alternativeSeats, Variables.getReservationId(job));
-            Map<String, Object> variables = Variables.of(job.getVariablesAsMap()).withSeats(alternativeSeats).get();
+            Map<String, Object> variables = Variables.empty().withSeats(alternativeSeats).get();
             completeJob(client, job, variables);
         } else {
             failJob(client, job, "no seats found");
