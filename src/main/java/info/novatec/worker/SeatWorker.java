@@ -34,8 +34,9 @@ public class SeatWorker extends Worker {
     }
 
     @ZeebeWorker(type = "check-seats")
-    public void checkSeats(final JobClient client, final ActivatedJob job) {
+    public void checkSeats(final JobClient client, final ActivatedJob job) throws InterruptedException {
         logger.info("checking seat availability");
+        Thread.sleep(2000);
         List<String> seats = Variables.getSeats(job);
         if (!seats.isEmpty()) {
             boolean available = seatService.seatsAvailable(seats);
@@ -47,8 +48,9 @@ public class SeatWorker extends Worker {
     }
 
     @ZeebeWorker(type = "reserve-seats")
-    public void reserveSeats(final JobClient client, final ActivatedJob job) {
+    public void reserveSeats(final JobClient client, final ActivatedJob job) throws InterruptedException {
         logger.info("reserving seats");
+        Thread.sleep(2000);
         List<String> seats = Variables.getSeats(job);
         if (!seats.isEmpty()) {
             seatService.reserveSeats(seats);
@@ -61,8 +63,9 @@ public class SeatWorker extends Worker {
     }
 
     @ZeebeWorker(type = "alt-seats")
-    public void alternativeSeats(final JobClient client, final ActivatedJob job) {
+    public void alternativeSeats(final JobClient client, final ActivatedJob job) throws InterruptedException {
         logger.info("getting alternative seats");
+        Thread.sleep(2000);
         List<String> seats = Variables.getSeats(job);
         if (!seats.isEmpty()) {
             List<String> alternativeSeats = seatService.getAlternativeSeats(seats);
@@ -75,8 +78,9 @@ public class SeatWorker extends Worker {
     }
 
     @ZeebeWorker(type = "release-seats")
-    public void releaseSeats(final JobClient client, final ActivatedJob job) {
+    public void releaseSeats(final JobClient client, final ActivatedJob job) throws InterruptedException {
         logger.info("releasing seats");
+        Thread.sleep(2000);
         List<String> seats = Variables.getSeats(job);
         if (!seats.isEmpty()) {
             seatService.releaseSeats(seats);

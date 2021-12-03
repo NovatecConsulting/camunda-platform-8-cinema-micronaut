@@ -19,7 +19,7 @@ micronaut {
 
 dependencies {
     implementation "io.micronaut:micronaut-runtime"
-    implementation "info.novatec:micronaut-zeebe-client-feature:$zeebeClientVersion"
+    implementation "info.novatec:micronaut-zeebe-client-feature:$micronautZeebeVersion"
     implementation "javax.annotation:javax.annotation-api"
     implementation "com.google.zxing:core:$zxingVersion" // qrcode generation
     implementation "org.apache.commons:commons-lang3:$commonsLang3Version" // random string generator

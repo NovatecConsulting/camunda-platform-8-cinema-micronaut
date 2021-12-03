@@ -31,15 +31,18 @@ public class TicketWorker extends Worker {
     }
 
     @ZeebeWorker(type = "generate-ticket")
-    public void generateTicket(final JobClient client, final ActivatedJob job) {
+    public void generateTicket(final JobClient client, final ActivatedJob job) throws InterruptedException {
         logger.info("generating ticket");
+        Thread.sleep(2000);
         String ticketId = ticketService.generateTicketId();
         Map<String, Object> variables = Variables.empty().withTicketId(ticketId).get();
         completeJob(client, job, variables);
     }
 
     @ZeebeWorker(type = "send-ticket")
-    public void sendTicket(final JobClient client, final ActivatedJob job) {
+    public void sendTicket(final JobClient client, final ActivatedJob job) throws InterruptedException {
+        logger.info("sending ticket");
+        Thread.sleep(2000);
         String ticket = Variables.getTicketCode(job);
         String qrCode = Variables.getQrCode(job);
         String userId = Variables.getUserId(job);

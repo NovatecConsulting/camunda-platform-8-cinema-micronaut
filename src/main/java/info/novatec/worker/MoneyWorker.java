@@ -26,8 +26,9 @@ public class MoneyWorker extends Worker {
     }
 
     @ZeebeWorker(type = "get-money")
-    public void getMoney(final JobClient client, final ActivatedJob job) {
+    public void getMoney(final JobClient client, final ActivatedJob job) throws InterruptedException {
         logger.info("withdrawing money");
+        Thread.sleep(2000);
         Integer price = Variables.getTicketPrice(job);
         if (price != null) {
             try {
