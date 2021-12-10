@@ -14,6 +14,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.io.IOException;
 
 import static java.util.Map.entry;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.camunda.community.zeebe.testutils.ZeebeWorkerAssertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
@@ -36,17 +37,19 @@ class QrWorkerTest {
     }
 
     @Test
-    void test_worker_completes_job_when_qr_code_is_generated() throws Exception {
+    void test_worker_completes_job_and_sets_it_as_var_when_qr_code_is_generated() throws Exception {
         // given
-        when(service.generateQRCode(any())).thenReturn("abcdef");
+        when(service.generateQRCode(any())).thenReturn("myQrCodeBase64");
 
         // when
         worker.generateTicket(jobClient, activatedJob);
 
         // then
         assertThat(activatedJob).completed();
-        Assertions.assertThat(activatedJob.getOutputVariables())
-                .containsExactly(entry(Variables.VariableName.QR_CODE.getName(), "abcdef"));
+        assertThat(activatedJob.getOutputVariables())
+                .containsExactly(
+                        entry(Variables.VariableName.QR_CODE.getName(), "myQrCodeBase64")
+                );
     }
 
     @Test
