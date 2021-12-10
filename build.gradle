@@ -28,6 +28,7 @@ dependencies {
     testImplementation "org.mockito:mockito-core"
     testImplementation "org.mockito:mockito-junit-jupiter"
     testImplementation "org.assertj:assertj-core"
+    testImplementation "io.zeebe:zeebe-worker-java-testutils:$zeebeWorkerTestVersion"
 }
 
 application {

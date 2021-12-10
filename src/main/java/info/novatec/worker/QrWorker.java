@@ -29,11 +29,16 @@ public class QrWorker extends Worker {
     }
 
     @ZeebeWorker(type = "generate-qr")
-    public void generateTicket(final JobClient client, final ActivatedJob job) throws IOException, InterruptedException {
+    public void generateTicket(final JobClient client, final ActivatedJob job) throws IOException {
         logger.info("generating qr code");
         String ticketCode = Variables.getTicketCode(job);
-        String qrCode = qrCodeService.generateQRCode(ticketCode);
-        Map<String, Object> variables = Variables.empty().withQrCode(qrCode).get();
-        completeJob(client, job, variables);
+        try {
+            String qrCode = qrCodeService.generateQRCode(ticketCode);
+            Map<String, Object> variables = Variables.empty().withQrCode(qrCode).get();
+            completeJob(client, job, variables);
+        } catch(IOException e) {
+            failJob(client, job, e.getMessage());
+        }
+
     }
 }

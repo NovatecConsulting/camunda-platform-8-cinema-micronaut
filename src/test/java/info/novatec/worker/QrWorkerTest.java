@@ -2,36 +2,65 @@ package info.novatec.worker;
 
 import info.novatec.process.Variables;
 import info.novatec.service.QRCodeService;
+import org.assertj.core.api.Assertions;
+import org.camunda.community.zeebe.testutils.stubs.ActivatedJobStub;
+import org.camunda.community.zeebe.testutils.stubs.JobClientStub;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.BDDMockito.given;
+import java.io.IOException;
+
+import static java.util.Map.entry;
+import static org.camunda.community.zeebe.testutils.ZeebeWorkerAssertions.assertThat;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
-class QrWorkerTest extends WorkerTest {
+class QrWorkerTest {
 
     @Mock
     QRCodeService service;
 
+    private QrWorker worker;
+    private JobClientStub jobClient;
+    private ActivatedJobStub activatedJob;
+
+    @BeforeEach
+    void setup() {
+        worker = new QrWorker(service);
+        jobClient = new JobClientStub();
+        activatedJob = jobClient.createActivatedJob();
+    }
+
     @Test
-    void qr_worker_generate_qr_completes_job_with_qr_variable() throws Exception {
+    void test_worker_completes_job_when_qr_code_is_generated() throws Exception {
         // given
-        QrWorker worker = new QrWorker(service);
-        String expectedString = "qrCodeBase64String";
-        given(service.generateQRCode(anyString())).willReturn(expectedString);
-        given_job_with_key(123456L);
-        given_job_will_return_single_variable(Variables.VariableName.TICKET_ID, "ticketId");
+        when(service.generateQRCode(any())).thenReturn("abcdef");
 
         // when
         worker.generateTicket(jobClient, activatedJob);
 
         // then
-        then_new_complete_command_step_with_key(123456L);
-        then_complete_command_step_called_with_single_variable(Variables.VariableName.QR_CODE, expectedString);
-        then_complete_command_step_sent_and_exceptionally();
+        assertThat(activatedJob).completed();
+        Assertions.assertThat(activatedJob.getOutputVariables())
+                .containsExactly(entry(Variables.VariableName.QR_CODE.getName(), "abcdef"));
+    }
+
+    @Test
+    void test_worker_fails_job_when_qr_code_generation_fails() throws Exception {
+        // given
+        when(service.generateQRCode(any())).thenThrow(new IOException("error generating qr code"));
+
+        // when
+        worker.generateTicket(jobClient, activatedJob);
+
+        // then
+        assertThat(activatedJob).failed()
+                .hasErrorMessage("error generating qr code")
+                .hasRetries(0);
     }
 
 }
