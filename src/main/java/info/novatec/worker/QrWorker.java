@@ -31,7 +31,6 @@ public class QrWorker extends Worker {
     @ZeebeWorker(type = "generate-qr")
     public void generateTicket(final JobClient client, final ActivatedJob job) throws IOException, InterruptedException {
         logger.info("generating qr code");
-        Thread.sleep(2000);
         String ticketCode = Variables.getTicketCode(job);
         String qrCode = qrCodeService.generateQRCode(ticketCode);
         Map<String, Object> variables = Variables.empty().withQrCode(qrCode).get();
