@@ -92,6 +92,6 @@ public class SeatWorker extends Worker {
 
     public void offerAltSeats(List<String> seats, String reservationId) {
         logger.info("The seats you selected are not available. Alternative seats are {}", seats);
-        logger.info("To accept these seats, click the following link: http://localhost:{}/offer/{}", port, reservationId);
+        logger.info("To accept these seats, click the following link: http://localhost:{}/reservation/offer/{}", port, reservationId);
     }
 }

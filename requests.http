@@ -1,7 +1,7 @@
 ### Create Reservation
 
-POST http://localhost:8089/reservation/movie/Ghostbusters?seats=A1,A2&userId=max.mustermann
+POST http://localhost:8089/reservation/movie/ghostbusters?seats=A1,A2&userId=max.mustermann
 
-### Check Reservation
+### Accept seat change for reservation (if available)
 
-GET http://localhost:8089/offer/c2a3cb6b-45ab-4840-9b40-b33cdb9df3ae
+POST http://localhost:8089/reservation/offer/c2a3cb6b-45ab-4840-9b40-b33cdb9df3ae

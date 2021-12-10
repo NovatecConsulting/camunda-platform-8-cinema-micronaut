@@ -30,7 +30,7 @@ Micronaut Zeebe Cinema is a showcase for the Camunda Cloud platform and the Micr
     - use your IDE to start the ZeebeCinemaApp
 - use a REST client to make a reservation and check it:
     - `POST http://localhost:8089/reservation/movie/{movie}?seats=A1,A2&userId=max.mustermann`
-    - `GET http://localhost:8089/offer/c2a3cb6b-45ab-4840-9b40-b33cdb9df3ae`
+    - `POST http://localhost:8089/reservation/offer/c2a3cb6b-45ab-4840-9b40-b33cdb9df3ae`
 - check the log output or Operate for the progress (maybe you need to refine log levels -> Zeebe is very noisy in DEBUG)
 - in case alternative seats are offered 
     - you can check your log for an offer link: `To accept these seats, click the following link: ...`

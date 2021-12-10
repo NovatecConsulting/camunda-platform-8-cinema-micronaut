@@ -45,15 +45,15 @@ public class CinemaController {
         return HttpResponse.created("Reservation issued: " + reservationId);
     }
 
-    @Get("/offer/{id}")
+    @Post("/reservation/offer/{id}")
     public HttpResponse<String> acceptOffer(@PathVariable String id) {
         zeebeClient.newPublishMessageCommand()
                 .messageName(VERIFIED_MESSAGE)
                 .correlationKey(id)
                 .send()
                 .exceptionally( throwable -> { throw new RuntimeException("Could not send message", throwable); });
-        logger.info("The offer for reservation {} was accepted", id);
-        return HttpResponse.accepted().body("Reservation change accepted");
+        logger.info("The seat offer for reservation {} was accepted", id);
+        return HttpResponse.accepted().body("Reservation change for alternative seats accepted");
     }
 
 }
