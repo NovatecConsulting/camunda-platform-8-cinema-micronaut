@@ -4,4 +4,4 @@ POST http://localhost:8089/reservation/movie/ghostbusters?seats=A1,A2&userId=max
 
 ### Accept seat change for reservation (if available)
 
-POST http://localhost:8089/reservation/offer/c2a3cb6b-45ab-4840-9b40-b33cdb9df3ae
+GET http://localhost:8089/reservation/offer/c2a3cb6b-45ab-4840-9b40-b33cdb9df3ae

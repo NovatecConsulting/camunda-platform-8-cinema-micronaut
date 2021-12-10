@@ -45,7 +45,7 @@ public class CinemaController {
         return HttpResponse.created("Reservation issued: " + reservationId);
     }
 
-    @Post("/reservation/offer/{id}")
+    @Get("/reservation/offer/{id}")
     public HttpResponse<String> acceptOffer(@PathVariable String id) {
         zeebeClient.newPublishMessageCommand()
                 .messageName(VERIFIED_MESSAGE)
