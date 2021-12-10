@@ -1,5 +1,7 @@
 # Local setup
 
+NOTE: This file is a copy of the file provided here: https://github.com/camunda-cloud/camunda-cloud-get-started
+
 The example setup starts a local Zeebe and Operate instance
 
 - start the docker environment
