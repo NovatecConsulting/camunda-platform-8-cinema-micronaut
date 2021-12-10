@@ -62,9 +62,9 @@ public class WorkerTest {
         lenient().when(jobClient.newThrowErrorCommand(anyLong())).thenReturn(throwErrorCommandStep1);
     }
 
-    protected void then_complete_command_step_sent_and_joined() {
+    protected void then_complete_command_step_sent_and_exceptionally() {
         then(completeJobCommandStep1).should().send();
-        then(completeResponseFuture).should().join();
+        then(completeResponseFuture).should().exceptionally(any());
     }
 
     protected void then_complete_command_step_called_with_single_variable(Variables.VariableName variableName, String value) {

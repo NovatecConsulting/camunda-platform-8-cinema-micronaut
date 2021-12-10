@@ -31,7 +31,7 @@ class QrWorkerTest extends WorkerTest {
         // then
         then_new_complete_command_step_with_key(123456L);
         then_complete_command_step_called_with_single_variable(Variables.VariableName.QR_CODE, expectedString);
-        then_complete_command_step_sent_and_joined();
+        then_complete_command_step_sent_and_exceptionally();
     }
 
 }
